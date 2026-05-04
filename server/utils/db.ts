@@ -1,8 +1,10 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-// DATA_DIR lets Docker deployments point to a mounted volume
-const dataDir = process.env.DATA_DIR ?? resolve(process.cwd(), 'server/data')
+// In production (Docker) NODE_ENV=production and cwd=/app, so data goes to /app/data
+// In development cwd=project root, so data goes to server/data
+const dataDir = process.env.DATA_DIR
+  ?? resolve(process.cwd(), process.env.NODE_ENV === 'production' ? 'data' : 'server/data')
 
 export async function readData<T>(name: string): Promise<T[]> {
   try {
