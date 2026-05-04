@@ -7,7 +7,7 @@ const MAX_SIZE = 10 * 1024 * 1024
 
 const uploadDir = resolve(
   process.cwd(),
-  process.env.NODE_ENV === 'production' ? 'server/data/uploads' : 'public/uploads',
+  process.env.NODE_ENV === 'production' ? 'data/uploads' : 'public/uploads',
 )
 
 export default defineEventHandler(async (event) => {

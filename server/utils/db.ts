@@ -1,8 +1,6 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-// In production (Docker) NODE_ENV=production and cwd=/app, so data goes to /app/data
-// In development cwd=project root, so data goes to server/data
 const dataDir = process.env.DATA_DIR
   ?? resolve(process.cwd(), process.env.NODE_ENV === 'production' ? 'data' : 'server/data')
 

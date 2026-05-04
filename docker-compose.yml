@@ -9,8 +9,7 @@ services:
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     volumes:
-      - ./data:/app/server/data
-      - ./uploads:/app/public/uploads
+      - ./data:/app/data
     restart: unless-stopped
 
 networks:

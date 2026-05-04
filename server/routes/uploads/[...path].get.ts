@@ -3,7 +3,7 @@ import { resolve, extname } from 'node:path'
 
 const uploadDir = resolve(
   process.cwd(),
-  process.env.NODE_ENV === 'production' ? 'server/data/uploads' : 'public/uploads',
+  process.env.NODE_ENV === 'production' ? 'data/uploads' : 'public/uploads',
 )
 
 const MIME: Record<string, string> = {
