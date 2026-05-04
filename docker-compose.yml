@@ -6,6 +6,8 @@ services:
     container_name: nuxt_preview
     networks:
       - scoobydoo
+    environment:
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
     restart: unless-stopped
 
 networks:
