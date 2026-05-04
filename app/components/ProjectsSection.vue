@@ -1,45 +1,26 @@
 <script setup lang="ts">
-const projects = [
-  {
-    num: '01',
-    category: 'Penetration Test',
-    title: 'Webapplicatie Security Audit',
-    description: 'Volledige pentest van een e-commerce platform. 14 kritieke kwetsbaarheden geïdentificeerd, gedocumenteerd en opgelost. Van SQL injection tot session management issues.',
-    link: '#',
-    linkLabel: 'Lees meer →',
-    reverse: false,
-  },
-  {
-    num: '02',
-    category: 'Netwerk Security',
-    title: 'Infrastructuur Hardening KMO',
-    description: 'Analyse en verharding van de volledige IT-infrastructuur. Firewall-configuratie, Active Directory hardening en security awareness training voor medewerkers.',
-    link: '#',
-    linkLabel: 'Lees meer →',
-    reverse: true,
-  },
-  {
-    num: '03',
-    category: 'Open Source Tool',
-    title: 'Recon Automatisatie Framework',
-    description: 'Zelfgebouwd tool dat subdomain enumeration, port scanning en vulnerability detection combineert in één geautomatiseerde workflow. Beschikbaar op GitHub.',
-    link: '#',
-    linkLabel: 'Bekijk op GitHub →',
-    reverse: false,
-  },
-]
+interface Project {
+  id: number
+  category: string
+  title: string
+  description: string
+  link: string
+  linkLabel: string
+}
+
+const { data: projects } = await useFetch<Project[]>('/api/projects')
 </script>
 
 <template>
   <section id="projects">
     <div
-      v-for="project in projects"
-      :key="project.num"
+      v-for="(project, i) in projects"
+      :key="project.id"
       class="proj-editorial reveal"
-      :class="{ reverse: project.reverse }"
+      :class="{ reverse: i % 2 === 1 }"
     >
       <div class="proj-visual">
-        <div class="proj-visual-inner">{{ project.num }}</div>
+        <div class="proj-visual-inner">{{ String(i + 1).padStart(2, '0') }}</div>
       </div>
       <div class="proj-info">
         <div>

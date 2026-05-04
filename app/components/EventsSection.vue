@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { events } from '~/data/events'
+interface Event {
+  id: number
+  date: string
+  type: string
+  title: string
+  description: string
+  linkedinUrl: string
+}
+
+const { data: events } = await useFetch<Event[]>('/api/events')
 </script>
 
 <template>

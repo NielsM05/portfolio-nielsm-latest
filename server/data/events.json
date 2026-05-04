@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "date": "15 april 2025",
+    "type": "Conferentie",
+    "title": "Security BSides Brussel 2025",
+    "description": "Spreker op het BSides-evenement over moderne aanvalstechnieken op webapplicaties en hoe verdedigers zich hierop kunnen voorbereiden.",
+    "linkedinUrl": "#"
+  },
+  {
+    "id": 2,
+    "date": "3 maart 2025",
+    "type": "Workshop",
+    "title": "Ethical Hacking Workshop — Howest",
+    "description": "Gastdocent bij Howest voor een hands-on workshop over OWASP Top 10 voor studenten cybersecurity. Meer dan 60 deelnemers.",
+    "linkedinUrl": "#"
+  },
+  {
+    "id": 3,
+    "date": "18 januari 2025",
+    "type": "Webinar",
+    "title": "Zero Trust Architecture in de Praktijk",
+    "description": "Online presentatie over de implementatie van Zero Trust in KMO-omgevingen — praktijkgerichte aanpak zonder enterprise-budget.",
+    "linkedinUrl": "#"
+  }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "category": "Testing",
+    "title": "Dit is een test ",
+    "description": "Dit is de beschrijving van de testpost",
+    "link": "https://youtube.com",
+    "linkLabel": "Lees meer →"
+  }
+]
