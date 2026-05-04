@@ -3,7 +3,12 @@ import { writeFile, mkdir } from 'node:fs/promises'
 import { resolve, extname } from 'node:path'
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
-const MAX_SIZE = 10 * 1024 * 1024 // 10MB
+const MAX_SIZE = 10 * 1024 * 1024
+
+const uploadDir = resolve(
+  process.cwd(),
+  process.env.NODE_ENV === 'production' ? 'server/data/uploads' : 'public/uploads',
+)
 
 export default defineEventHandler(async (event) => {
   requireAuth(event)
@@ -20,7 +25,6 @@ export default defineEventHandler(async (event) => {
   }
   const ext = extname(file.filename).toLowerCase() || '.jpg'
   const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}${ext}`
-  const uploadDir = resolve(process.cwd(), 'public/uploads')
   await mkdir(uploadDir, { recursive: true })
   await writeFile(resolve(uploadDir, filename), file.data)
   return { url: `/uploads/${filename}` }
