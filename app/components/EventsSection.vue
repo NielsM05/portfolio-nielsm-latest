@@ -1,15 +1,24 @@
 <script setup lang="ts">
 interface Event {
   id: number
-  date: string
-  type: string
-  title: string
-  description: string
+  date_en: string;  date_nl: string
+  type_en: string;  type_nl: string
+  title_en: string; title_nl: string
+  description_en: string; description_nl: string
   linkedinUrl: string
 }
 
-const { t } = useLocale()
+const { locale, t } = useLocale()
 const { data: events } = await useFetch<Event[]>('/api/events')
+
+const display = computed(() => (events.value ?? []).map(e => ({
+  id: e.id,
+  linkedinUrl: e.linkedinUrl,
+  date:        e[`date_${locale.value}` as keyof Event] as string        || e.date_en,
+  type:        e[`type_${locale.value}` as keyof Event] as string        || e.type_en,
+  title:       e[`title_${locale.value}` as keyof Event] as string       || e.title_en,
+  description: e[`description_${locale.value}` as keyof Event] as string || e.description_en,
+})))
 </script>
 
 <template>
@@ -27,11 +36,7 @@ const { data: events } = await useFetch<Event[]>('/api/events')
       </div>
 
       <div class="events-list">
-        <article
-          v-for="event in events"
-          :key="event.id"
-          class="event-card reveal"
-        >
+        <article v-for="event in display" :key="event.id" class="event-card reveal">
           <div class="event-meta">
             <span class="event-type">{{ event.type }}</span>
             <span class="event-date">{{ event.date }}</span>
@@ -56,11 +61,7 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   margin: 0 auto;
 }
 
-.events-inner {
-  display: flex;
-  flex-direction: column;
-  gap: 5rem;
-}
+.events-inner { display: flex; flex-direction: column; gap: 5rem; }
 
 .events-top {
   display: flex;
@@ -85,10 +86,7 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   line-height: 0.9;
 }
 
-.events-title em {
-  font-style: italic;
-  color: var(--accent);
-}
+.events-title em { font-style: italic; color: var(--accent); }
 
 .events-sub {
   max-width: 300px;
@@ -105,15 +103,9 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   transition: color 0.2s;
 }
 
-.li-link:hover {
-  color: var(--accent);
-}
+.li-link:hover { color: var(--accent); }
 
-.events-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
+.events-list { display: flex; flex-direction: column; gap: 1px; }
 
 .event-card {
   display: grid;
@@ -125,19 +117,10 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   transition: border-color 0.3s;
 }
 
-.event-card:first-child {
-  border-top: 1px solid var(--border);
-}
+.event-card:first-child { border-top: 1px solid var(--border); }
+.event-card:hover { border-color: var(--accent); }
 
-.event-card:hover {
-  border-color: var(--accent);
-}
-
-.event-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+.event-meta { display: flex; flex-direction: column; gap: 0.5rem; }
 
 .event-type {
   font-family: var(--mono);
@@ -147,11 +130,7 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   text-transform: uppercase;
 }
 
-.event-date {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  color: var(--text);
-}
+.event-date { font-family: var(--mono); font-size: 0.65rem; color: var(--text); }
 
 .event-title {
   font-family: var(--display);
@@ -162,11 +141,7 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   line-height: 1.3;
 }
 
-.event-desc {
-  font-size: 0.85rem;
-  line-height: 1.7;
-  max-width: 580px;
-}
+.event-desc { font-size: 0.85rem; line-height: 1.7; max-width: 580px; }
 
 .event-link {
   font-family: var(--mono);
@@ -180,7 +155,5 @@ const { data: events } = await useFetch<Event[]>('/api/events')
   flex-shrink: 0;
 }
 
-.event-link:hover {
-  color: var(--accent);
-}
+.event-link:hover { color: var(--accent); }
 </style>

@@ -1,18 +1,26 @@
 <script setup lang="ts">
 interface Project {
   id: number
-  category: string
-  title: string
-  description: string
+  category_en: string; category_nl: string
+  title_en: string;    title_nl: string
+  description_en: string; description_nl: string
 }
 
+const { locale, t } = useLocale()
 const { data: projects } = await useFetch<Project[]>('/api/projects')
+
+const display = computed(() => (projects.value ?? []).map(p => ({
+  id: p.id,
+  category: p[`category_${locale.value}` as keyof Project] as string || p.category_en,
+  title:    p[`title_${locale.value}` as keyof Project] as string    || p.title_en,
+  description: p[`description_${locale.value}` as keyof Project] as string || p.description_en,
+})))
 </script>
 
 <template>
   <section id="projects">
     <div
-      v-for="(project, i) in projects"
+      v-for="(project, i) in display"
       :key="project.id"
       class="proj-editorial reveal"
       :class="{ reverse: i % 2 === 1 }"
@@ -26,7 +34,7 @@ const { data: projects } = await useFetch<Project[]>('/api/projects')
           <div class="proj-h">{{ project.title }}</div>
           <p class="proj-p">{{ project.description }}</p>
         </div>
-        <NuxtLink :to="`/projects/${project.id}`" class="proj-link">Lees meer →</NuxtLink>
+        <NuxtLink :to="`/projects/${project.id}`" class="proj-link">{{ t.project.readMore }}</NuxtLink>
       </div>
     </div>
   </section>
@@ -48,17 +56,10 @@ const { data: projects } = await useFetch<Project[]>('/api/projects')
   transition: border-color 0.3s;
 }
 
-.proj-editorial:hover {
-  border-color: var(--accent);
-}
+.proj-editorial:hover { border-color: var(--accent); }
 
-.proj-editorial.reverse {
-  direction: rtl;
-}
-
-.proj-editorial.reverse > * {
-  direction: ltr;
-}
+.proj-editorial.reverse { direction: rtl; }
+.proj-editorial.reverse > * { direction: ltr; }
 
 .proj-visual {
   background: var(--surface);
@@ -66,7 +67,6 @@ const { data: projects } = await useFetch<Project[]>('/api/projects')
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
   overflow: hidden;
 }
 
@@ -125,7 +125,5 @@ const { data: projects } = await useFetch<Project[]>('/api/projects')
   text-transform: uppercase;
 }
 
-.proj-link:hover {
-  text-decoration: underline;
-}
+.proj-link:hover { text-decoration: underline; }
 </style>

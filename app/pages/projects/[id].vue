@@ -3,22 +3,34 @@ interface Collaborator { name: string; linkedinUrl: string }
 
 interface Project {
   id: number
-  category: string
-  title: string
-  description: string
-  content: string
+  category_en: string; category_nl: string
+  title_en: string;    title_nl: string
+  description_en: string; description_nl: string
+  content_en: string;  content_nl: string
   externalLink: string
   photos: string[]
   collaborators: Collaborator[]
 }
 
 const route = useRoute()
-const { t } = useLocale()
+const { locale, t } = useLocale()
 const { data: project, error } = await useFetch<Project>(`/api/projects/${route.params.id}`)
 
 if (error.value) {
-  throw createError({ statusCode: 404, statusMessage: 'Project niet gevonden' })
+  throw createError({ statusCode: 404, statusMessage: 'Project not found' })
 }
+
+const display = computed(() => {
+  const p = project.value
+  if (!p) return null
+  const l = locale.value
+  return {
+    category:    p[`category_${l}` as keyof Project] as string    || p.category_en,
+    title:       p[`title_${l}` as keyof Project] as string       || p.title_en,
+    description: p[`description_${l}` as keyof Project] as string || p.description_en,
+    content:     p[`content_${l}` as keyof Project] as string     || p.content_en,
+  }
+})
 </script>
 
 <template>
@@ -29,9 +41,9 @@ if (error.value) {
       <NuxtLink to="/#projects" class="back-link">{{ t.project.back }}</NuxtLink>
 
       <header class="detail-header">
-        <div class="detail-eyebrow">{{ project!.category }}</div>
-        <h1 class="detail-title">{{ project!.title }}</h1>
-        <p class="detail-lead">{{ project!.description }}</p>
+        <div class="detail-eyebrow">{{ display!.category }}</div>
+        <h1 class="detail-title">{{ display!.title }}</h1>
+        <p class="detail-lead">{{ display!.description }}</p>
       </header>
 
       <section v-if="project!.collaborators?.length" class="detail-section">
@@ -62,14 +74,14 @@ if (error.value) {
             rel="noopener"
             class="photo-link"
           >
-            <img :src="photo" :alt="`${project!.title} ${t.project.photos} ${i + 1}`" class="photo-img" />
+            <img :src="photo" :alt="`${display!.title} ${i + 1}`" class="photo-img" />
           </a>
         </div>
       </section>
 
-      <section v-if="project!.content" class="detail-section">
+      <section v-if="display!.content" class="detail-section">
         <h2 class="detail-section-label">{{ t.project.details }}</h2>
-        <div class="detail-content">{{ project!.content }}</div>
+        <div class="detail-content">{{ display!.content }}</div>
       </section>
 
       <div v-if="project!.externalLink" class="detail-cta">
@@ -84,10 +96,7 @@ if (error.value) {
 </template>
 
 <style scoped>
-.detail-wrap {
-  min-height: 100vh;
-  background: var(--bg);
-}
+.detail-wrap { min-height: 100vh; background: var(--bg); }
 
 .detail-main {
   max-width: 900px;
@@ -107,9 +116,7 @@ if (error.value) {
   margin-bottom: 3rem;
 }
 
-.back-link:hover {
-  color: var(--white);
-}
+.back-link:hover { color: var(--white); }
 
 .detail-header {
   margin-bottom: 4rem;
@@ -135,15 +142,9 @@ if (error.value) {
   margin-bottom: 1.5rem;
 }
 
-.detail-lead {
-  font-size: 1rem;
-  line-height: 1.8;
-  max-width: 680px;
-}
+.detail-lead { font-size: 1rem; line-height: 1.8; max-width: 680px; }
 
-.detail-section {
-  margin-bottom: 3.5rem;
-}
+.detail-section { margin-bottom: 3.5rem; }
 
 .detail-section-label {
   font-family: var(--mono);
@@ -154,11 +155,7 @@ if (error.value) {
   margin-bottom: 1.5rem;
 }
 
-.collab-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
+.collab-list { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 
 .collab-card {
   display: flex;
@@ -170,14 +167,9 @@ if (error.value) {
   transition: border-color 0.2s;
 }
 
-.collab-card:hover {
-  border-color: var(--accent);
-}
+.collab-card:hover { border-color: var(--accent); }
 
-.collab-name {
-  font-size: 0.85rem;
-  color: var(--white);
-}
+.collab-name { font-size: 0.85rem; color: var(--white); }
 
 .collab-li {
   font-family: var(--mono);
@@ -207,9 +199,7 @@ if (error.value) {
   transition: transform 0.4s;
 }
 
-.photo-link:hover .photo-img {
-  transform: scale(1.04);
-}
+.photo-link:hover .photo-img { transform: scale(1.04); }
 
 .detail-content {
   font-size: 0.9rem;
