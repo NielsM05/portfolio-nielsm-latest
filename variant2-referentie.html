@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Variant 2 — Cinematisch / Editorial</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Syne:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;
+  --surface:#111111;
+  --border:#1e1e1e;
+  --accent:#c0392b;
+  --accent-soft:rgba(192,57,43,0.12);
+  --text:#707070;
+  --white:#f0f0f0;
+  --display:'Playfair Display',serif;
+  --body:'Syne',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:2rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background 0.4s;
+}
+nav.dark{background:rgba(10,10,10,0.97);border-bottom:1px solid var(--border)}
+.nav-mark{
+  font-family:var(--mono);font-size:0.7rem;
+  color:var(--white);letter-spacing:0.1em;
+}
+.nav-mark em{color:var(--accent);font-style:normal}
+.nav-menu{display:flex;gap:2.5rem;list-style:none}
+.nav-menu a{
+  font-family:var(--mono);font-size:0.65rem;color:var(--text);
+  text-decoration:none;letter-spacing:0.12em;text-transform:uppercase;
+  transition:color 0.2s;
+}
+.nav-menu a:hover{color:var(--white)}
+
+/* HERO — full bleed cinematic */
+#hero{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  padding:0 4rem 5rem;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Animated grid background */
+.grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size:80px 80px;
+  mask-image:radial-gradient(ellipse 70% 80% at 70% 30%, black, transparent);
+}
+
+/* Red circle accent */
+.hero-orb{
+  position:absolute;
+  width:600px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(192,57,43,0.15) 0%, transparent 70%);
+  top:-100px;right:-100px;
+  pointer-events:none;
+}
+
+.hero-eyebrow{
+  font-family:var(--mono);font-size:0.65rem;
+  color:var(--accent);letter-spacing:0.25em;text-transform:uppercase;
+  margin-bottom:2rem;
+  display:flex;align-items:center;gap:1rem;
+  opacity:0;animation:up 0.7s 0.3s forwards;
+}
+.hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--accent)}
+
+h1.cinematic{
+  font-family:var(--display);
+  font-size:clamp(4rem,11vw,13rem);
+  font-weight:900;
+  color:var(--white);
+  line-height:0.85;
+  letter-spacing:-0.02em;
+  max-width:900px;
+  opacity:0;animation:up 0.9s 0.5s forwards;
+}
+h1.cinematic .italic{font-style:italic;color:var(--accent)}
+
+.hero-bottom{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  margin-top:3rem;
+  opacity:0;animation:up 0.8s 0.9s forwards;
+}
+.hero-sub{
+  font-size:0.95rem;color:var(--text);max-width:360px;line-height:1.7;
+}
+.hero-actions{display:flex;gap:1rem;flex-shrink:0}
+.btn{
+  font-family:var(--mono);font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;
+  padding:1rem 2rem;text-decoration:none;display:inline-block;transition:all 0.25s;border:1px solid;
+}
+.btn-red{background:var(--accent);color:var(--white);border-color:var(--accent)}
+.btn-red:hover{background:transparent;color:var(--accent)}
+.btn-outline{background:transparent;color:var(--text);border-color:var(--border)}
+.btn-outline:hover{border-color:var(--white);color:var(--white)}
+
+/* Scroll indicator */
+.scroll-cue{
+  position:absolute;right:4rem;top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:1rem;
+  opacity:0;animation:fadeIn 1s 1.5s forwards;
+}
+.scroll-cue span{
+  font-family:var(--mono);font-size:0.6rem;color:var(--text);
+  letter-spacing:0.2em;text-transform:uppercase;
+  writing-mode:vertical-rl;
+}
+.scroll-line{width:1px;height:80px;background:linear-gradient(to bottom, var(--accent), transparent);animation:grow 2s ease-in-out infinite}
+
+/* FULL WIDTH DIVIDER SECTION */
+.chapter{
+  border-top:1px solid var(--border);
+  padding:1.5rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.chapter-num{font-family:var(--mono);font-size:0.65rem;color:var(--border)}
+.chapter-title{font-family:var(--mono);font-size:0.65rem;color:var(--text);letter-spacing:0.15em;text-transform:uppercase}
+
+/* ABOUT */
+#about{padding:8rem 4rem;max-width:1200px;margin:0 auto}
+.about-hero-text{
+  font-family:var(--display);
+  font-size:clamp(2rem,4vw,3.5rem);
+  color:var(--white);
+  line-height:1.2;
+  font-weight:700;
+  max-width:800px;
+  margin-bottom:4rem;
+}
+.about-hero-text em{color:var(--accent);font-style:italic}
+.about-cols{display:grid;grid-template-columns:1fr 1fr;gap:5rem}
+.about-cols p{font-size:0.9rem;line-height:1.8;margin-bottom:1rem}
+
+.cert-list{margin-top:0.5rem}
+.cert-entry{
+  display:flex;justify-content:space-between;
+  padding:1rem 0;border-bottom:1px solid var(--border);
+  font-size:0.85rem;
+}
+.cert-entry:first-child{border-top:1px solid var(--border)}
+.cert-entry-name{color:var(--white)}
+.cert-entry-yr{font-family:var(--mono);font-size:0.65rem;color:var(--accent)}
+
+/* PROJECTS — editorial stacked */
+#projects{padding:0 4rem 8rem;max-width:1200px;margin:0 auto}
+.proj-editorial{
+  display:grid;grid-template-columns:1fr 1fr;
+  border:1px solid var(--border);
+  margin-bottom:1px;
+  overflow:hidden;
+  transition:border-color 0.3s;
+}
+.proj-editorial:hover{border-color:var(--accent)}
+.proj-editorial.reverse{direction:rtl}
+.proj-editorial.reverse > *{direction:ltr}
+
+.proj-visual{
+  background:var(--surface);
+  min-height:280px;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.proj-visual-inner{
+  font-family:var(--display);
+  font-size:8rem;
+  font-weight:900;
+  color:transparent;
+  -webkit-text-stroke:1px rgba(192,57,43,0.2);
+  user-select:none;
+}
+.proj-info{
+  padding:3rem;
+  display:flex;flex-direction:column;justify-content:space-between;
+  border-left:1px solid var(--border);
+}
+.proj-editorial.reverse .proj-info{border-left:none;border-right:1px solid var(--border)}
+.proj-cat{font-family:var(--mono);font-size:0.6rem;color:var(--accent);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem}
+.proj-h{font-family:var(--display);font-size:1.8rem;color:var(--white);font-weight:700;margin-bottom:1rem;line-height:1.2}
+.proj-p{font-size:0.85rem;line-height:1.7;margin-bottom:2rem}
+.proj-link{font-family:var(--mono);font-size:0.65rem;color:var(--accent);text-decoration:none;letter-spacing:0.1em;text-transform:uppercase}
+.proj-link:hover{text-decoration:underline}
+
+/* SKILLS */
+#skills{padding:8rem 4rem;background:var(--surface);border-top:1px solid var(--border)}
+.skills-inner{max-width:1200px;margin:0 auto}
+.skills-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:5rem}
+.skills-top h2{font-family:var(--display);font-size:clamp(3rem,6vw,5rem);color:var(--white);font-weight:900;font-style:italic}
+.skills-top p{max-width:300px;font-size:0.85rem;line-height:1.7;text-align:right}
+.skills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.skill-block{background:var(--surface);padding:2rem 1.5rem}
+.skill-block-title{
+  font-family:var(--mono);font-size:0.6rem;color:var(--accent);
+  letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1.5rem;
+}
+.s-item{
+  padding:0.6rem 0;border-bottom:1px solid rgba(30,30,30,0.8);
+  font-size:0.82rem;color:var(--text);display:flex;justify-content:space-between;
+  align-items:center;
+}
+.s-item:last-child{border-bottom:none}
+.s-item:hover{color:var(--white)}
+.s-lvl{font-family:var(--mono);font-size:0.6rem;color:var(--border)}
+.s-lvl.hi{color:var(--accent)}
+
+/* CONTACT */
+#contact{padding:8rem 4rem;max-width:1200px;margin:0 auto}
+.contact-big{
+  font-family:var(--display);
+  font-size:clamp(3rem,7vw,7rem);
+  color:var(--white);font-weight:900;
+  line-height:0.9;margin-bottom:4rem;
+}
+.contact-big em{color:var(--accent);font-style:italic}
+.contact-split{display:grid;grid-template-columns:1fr 1fr;gap:6rem}
+.contact-info p{font-size:0.9rem;line-height:1.8;margin-bottom:1.5rem}
+.contact-mail{
+  font-family:var(--display);font-size:1.4rem;color:var(--white);
+  text-decoration:none;border-bottom:1px solid var(--accent);
+  padding-bottom:0.3rem;transition:color 0.2s;
+}
+.contact-mail:hover{color:var(--accent)}
+.form-row{margin-bottom:1px}
+.form-row label{
+  display:block;font-family:var(--mono);font-size:0.6rem;
+  color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;
+  margin-bottom:0.5rem;
+}
+.form-row input,.form-row textarea{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  outline:none;font-family:var(--body);font-size:0.9rem;color:var(--white);
+  padding:1rem 1.2rem;resize:none;transition:border-color 0.2s;
+  margin-bottom:1rem;
+}
+.form-row input:focus,.form-row textarea:focus{border-color:var(--accent)}
+.form-row textarea{min-height:120px}
+.form-btn{
+  width:100%;background:var(--accent);border:none;cursor:pointer;
+  font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--white);padding:1.2rem;transition:opacity 0.2s;
+}
+.form-btn:hover{opacity:0.85}
+
+footer{
+  border-top:1px solid var(--border);padding:2rem 4rem;
+  display:flex;justify-content:space-between;
+  font-family:var(--mono);font-size:0.62rem;color:var(--border);
+}
+
+@keyframes up{from{opacity:0;transform:translateY(35px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes grow{0%,100%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+.reveal{opacity:0;transform:translateY(25px);transition:opacity 0.8s,transform 0.8s}
+.reveal.on{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-mark">JOUW_NAAM <em>//</em> SEC</div>
+  <ul class="nav-menu">
+    <li><a href="#about">Over</a></li>
+    <li><a href="#projects">Projecten</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-orb"></div>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+
+  <div class="hero-eyebrow">Cybersecurity Specialist — Beschikbaar voor werk</div>
+  <h1 class="cinematic">IK HOUD<br><span class="italic">AANVALLERS</span><br>BUITEN.</h1>
+  <div class="hero-bottom">
+    <p class="hero-sub">Penetration tester, security architect en ethisch hacker. Ik vind de zwakheden voordat de aanvallers dat doen.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-red">Mijn werk</a>
+      <a href="#contact" class="btn btn-outline">Neem contact op</a>
+    </div>
+  </div>
+</section>
+
+<div class="chapter"><span class="chapter-num">01</span><span class="chapter-title">Identificatie</span></div>
+
+<section id="about">
+  <p class="about-hero-text reveal">
+    Ik ben <em>Jouw Naam</em> — een cybersecurity specialist die gelooft dat de beste verdediging begint met denken als een aanvaller.
+  </p>
+  <div class="about-cols reveal">
+    <div>
+      <p>Met jaren ervaring in zowel offensieve als defensieve security help ik bedrijven, overheden en individuen hun digitale omgeving aantoonbaar veiliger te maken. Geen generieke adviezen — concrete bevindingen, duidelijke rapportages en haalbare oplossingen.</p>
+      <p>Mijn specialiteit ligt in webapplicaties, netwerksecurity en social engineering assessments. Ik denk als een aanvaller, maar werk als een trusted advisor.</p>
+    </div>
+    <div>
+      <div class="cert-list">
+        <div class="cert-entry"><span class="cert-entry-name">CompTIA Security+</span><span class="cert-entry-yr">2023</span></div>
+        <div class="cert-entry"><span class="cert-entry-name">CEH — Ethical Hacker</span><span class="cert-entry-yr">2024</span></div>
+        <div class="cert-entry"><span class="cert-entry-name">OSCP (In progress)</span><span class="cert-entry-yr">2025</span></div>
+        <div class="cert-entry"><span class="cert-entry-name">ISO 27001 Awareness</span><span class="cert-entry-yr">2023</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="chapter"><span class="chapter-num">02</span><span class="chapter-title">Bewijs van werk</span></div>
+
+<section id="projects" style="padding-top:4rem">
+  <div class="proj-editorial reveal">
+    <div class="proj-visual"><div class="proj-visual-inner">01</div></div>
+    <div class="proj-info">
+      <div>
+        <div class="proj-cat">Penetration Test</div>
+        <div class="proj-h">Webapplicatie Security Audit</div>
+        <p class="proj-p">Volledige pentest van een e-commerce platform. 14 kritieke kwetsbaarheden geïdentificeerd, gedocumenteerd en opgelost. Van SQL injection tot session management issues.</p>
+      </div>
+      <a href="#" class="proj-link">Lees meer →</a>
+    </div>
+  </div>
+  <div class="proj-editorial reverse reveal">
+    <div class="proj-visual"><div class="proj-visual-inner">02</div></div>
+    <div class="proj-info">
+      <div>
+        <div class="proj-cat">Netwerk Security</div>
+        <div class="proj-h">Infrastructuur Hardening KMO</div>
+        <p class="proj-p">Analyse en verharding van de volledige IT-infrastructuur. Firewall-configuratie, Active Directory hardening en security awareness training voor medewerkers.</p>
+      </div>
+      <a href="#" class="proj-link">Lees meer →</a>
+    </div>
+  </div>
+  <div class="proj-editorial reveal">
+    <div class="proj-visual"><div class="proj-visual-inner">03</div></div>
+    <div class="proj-info">
+      <div>
+        <div class="proj-cat">Open Source Tool</div>
+        <div class="proj-h">Recon Automatisatie Framework</div>
+        <p class="proj-p">Zelfgebouwd tool dat subdomain enumeration, port scanning en vulnerability detection combineert in één geautomatiseerde workflow. Beschikbaar op GitHub.</p>
+      </div>
+      <a href="#" class="proj-link">Bekijk op GitHub →</a>
+    </div>
+  </div>
+</section>
+
+<div class="chapter"><span class="chapter-num">03</span><span class="chapter-title">Capaciteiten</span></div>
+
+<section id="skills">
+  <div class="skills-inner">
+    <div class="skills-top reveal">
+      <h2>Skills &<br><em>Expertise</em></h2>
+      <p>Een combinatie van offensieve en defensieve technieken — opgebouwd door jarenlange praktijkervaring en continue bijscholing.</p>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-block">
+        <div class="skill-block-title">Offensief</div>
+        <div class="s-item"><span>Penetration Testing</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>Web App Hacking</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>Social Engineering</span><span class="s-lvl hi">//</span></div>
+        <div class="s-item"><span>Exploit Dev</span><span class="s-lvl">//</span></div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-title">Defensief</div>
+        <div class="s-item"><span>Incident Response</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>SIEM / Logging</span><span class="s-lvl hi">//</span></div>
+        <div class="s-item"><span>Threat Modelling</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>Forensics</span><span class="s-lvl">//</span></div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-title">Tools</div>
+        <div class="s-item"><span>Burp Suite</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>Metasploit</span><span class="s-lvl hi">//</span></div>
+        <div class="s-item"><span>Wireshark</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>Nmap / Nessus</span><span class="s-lvl hi">///</span></div>
+      </div>
+      <div class="skill-block">
+        <div class="skill-block-title">Code</div>
+        <div class="s-item"><span>Python</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>Bash</span><span class="s-lvl hi">///</span></div>
+        <div class="s-item"><span>PowerShell</span><span class="s-lvl hi">//</span></div>
+        <div class="s-item"><span>SQL</span><span class="s-lvl">//</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="chapter"><span class="chapter-num">04</span><span class="chapter-title">Verbinding</span></div>
+
+<section id="contact">
+  <div class="contact-big reveal">Klaar om<br>samen te <em>werken?</em></div>
+  <div class="contact-split">
+    <div class="contact-info reveal">
+      <p>Of je nu een pentest nodig hebt, advies zoekt over je security-architectuur, of gewoon een vraag hebt — ik reageer binnen 24 uur.</p>
+      <p>Gebaseerd in Brugge, beschikbaar remote en on-site.</p>
+      <a href="mailto:jouw@email.com" class="contact-mail">jouw@email.com</a>
+    </div>
+    <div class="reveal">
+      <div class="form-row">
+        <label>Naam</label>
+        <input type="text" placeholder="Jouw naam"/>
+      </div>
+      <div class="form-row">
+        <label>Email</label>
+        <input type="email" placeholder="jouw@email.com"/>
+      </div>
+      <div class="form-row">
+        <label>Bericht</label>
+        <textarea placeholder="Vertel me hoe ik kan helpen..."></textarea>
+      </div>
+      <button class="form-btn">Verstuur bericht →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>JOUW_NAAM — CYBERSECURITY SPECIALIST</span>
+  <span>© 2025 — BRUGGE, BELGIË</span>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(e => e.forEach(x => { if(x.isIntersecting) x.target.classList.add('on') }), {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('dark', window.scrollY > 60);
+});
+</script>
+</body>
+</html>

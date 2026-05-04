@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx nuxi@latest *)",
+      "Bash(npm install *)",
+      "Bash(chmod -R u+w /Users/niels/.npm/_cacache)",
+      "Bash(npm run *)",
+      "Bash(curl -s http://localhost:3000)"
+    ]
+  }
+}
