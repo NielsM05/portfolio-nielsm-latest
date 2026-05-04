@@ -1,0 +1,25 @@
+[
+  {
+    "id": 2,
+    "category_en": "Security",
+    "category_nl": "",
+    "title_en": "Honeypot Infrastructure",
+    "title_nl": "",
+    "description_en": "A team-based cybersecurity project focused on deploying a honeypot server for a school security exam. The environment was configured to attract and monitor suspicious traffic, log malicious behaviour in a structured way and apply protection measures to better understand attack patterns in a controlled setup.",
+    "description_nl": "",
+    "content_en": "This honeypot project was developed as part of a school cybersecurity exam and focused on setting up a controlled environment capable of attracting and analysing malicious activity. Working in a team, the goal was not just to deploy a server, but to build a realistic system that could simulate an exposed target, record hostile behaviour and provide useful insight into how attackers interact with vulnerable services.  A key part of the project was the deployment and configuration of the honeypot server itself. The environment was prepared to receive suspicious traffic while remaining stable and observable, allowing us to capture connection attempts, probing behaviour and potential attack patterns in a structured and measurable way. This gave us a practical view of how monitoring and logging can support cybersecurity investigations.  Alongside the deployment, a dedicated logging setup was implemented to register events and make malicious activity easier to interpret. This included collecting relevant system and interaction data so that the behaviour of external actors could be reviewed afterward. By combining infrastructure setup with monitoring, the project moved beyond theory and became a hands-on exercise in visibility, analysis and defensive thinking.  The final part of the assignment focused on implementing protective measures and understanding how to respond to what the honeypot revealed. This made the project especially valuable from an educational perspective: it connected deployment, detection and mitigation in one coherent workflow. As a team project, it also strengthened collaboration around system setup, analysis and security-oriented problem solving in a realistic exam context.",
+    "content_nl": "",
+    "externalLink": "",
+    "photos": [],
+    "collaborators": [
+      {
+        "name": "Xander Verbeke",
+        "linkedinUrl": "https://www.linkedin.com/in/xander-verbeke-813873291/"
+      },
+      {
+        "name": "Milan Beernaert",
+        "linkedinUrl": "https://www.linkedin.com/in/milan-beernaert-273620279/"
+      }
+    ]
+  }
+]

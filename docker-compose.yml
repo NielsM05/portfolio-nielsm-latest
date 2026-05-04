@@ -8,6 +8,10 @@ services:
       - scoobydoo
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DATA_DIR=/app/data
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/public/uploads
     restart: unless-stopped
 
 networks:
