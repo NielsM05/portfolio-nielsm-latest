@@ -12,11 +12,11 @@ onMounted(() => {
   <nav :class="{ dark: isDark }">
     <div class="nav-mark">NIELS MAES <em>//</em> SEC</div>
     <ul class="nav-menu">
-      <li><a href="#about">Over</a></li>
-      <li><a href="#projects">Projecten</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#events">Events</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="/#about">Over</a></li>
+      <li><a href="/#projects">Projecten</a></li>
+      <li><a href="/#skills">Skills</a></li>
+      <li><a href="/#events">Events</a></li>
+      <li><a href="/#contact">Contact</a></li>
     </ul>
   </nav>
 </template>

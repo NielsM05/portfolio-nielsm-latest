@@ -15,7 +15,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/projects/1)",
       "Bash(curl -s http://localhost:3000/api/projects/1)",
       "Bash(curl -s -X POST http://localhost:3000/api/auth -H 'Content-Type: application/json' -d '{\"password\":\"Kaasje123!\"}' -c /tmp/admin_cookie.txt)",
-      "Bash(curl -s -X POST http://localhost:3000/api/upload -b /tmp/admin_cookie.txt -F 'file=@/tmp/test.png;type=image/png')"
+      "Bash(curl -s -X POST http://localhost:3000/api/upload -b /tmp/admin_cookie.txt -F 'file=@/tmp/test.png;type=image/png')",
+      "Bash(curl -s http://localhost:3000/projects/1)"
     ]
   }
 }
