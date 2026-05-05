@@ -10,6 +10,14 @@ onMounted(() => {
 })
 
 function closeMenu() { isMenuOpen.value = false }
+
+const { data: blogPosts } = await useFetch<{ date_iso?: string }[]>('/api/blog')
+const hasNewPost = computed(() => {
+  const latest = blogPosts.value?.[0]?.date_iso
+  if (!latest) return false
+  const diffDays = (Date.now() - new Date(latest).getTime()) / 86_400_000
+  return diffDays <= 30
+})
 </script>
 
 <template>
@@ -21,7 +29,12 @@ function closeMenu() { isMenuOpen.value = false }
       <li><a href="/#projects" @click="closeMenu">{{ t.nav.projects }}</a></li>
       <li><a href="/#skills" @click="closeMenu">{{ t.nav.skills }}</a></li>
       <li><a href="/#events" @click="closeMenu">{{ t.nav.events }}</a></li>
-      <li><NuxtLink to="/blog" @click="closeMenu">{{ t.nav.blog }}</NuxtLink></li>
+      <li class="blog-li">
+        <NuxtLink to="/blog" class="blog-link" @click="closeMenu">
+          {{ t.nav.blog }}
+          <span class="new-dot" />
+        </NuxtLink>
+      </li>
       <li><a href="/#contact" @click="closeMenu">{{ t.nav.contact }}</a></li>
     </ul>
 
@@ -83,6 +96,25 @@ nav.dark {
 }
 
 .nav-menu a:hover { color: var(--white); }
+
+.blog-link { color: var(--accent) !important; position: relative; }
+.blog-link:hover { opacity: 0.8; }
+
+.new-dot {
+  position: absolute;
+  top: -3px;
+  right: -7px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
 
 .nav-right {
   display: flex;

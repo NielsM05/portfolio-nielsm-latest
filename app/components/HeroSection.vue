@@ -5,7 +5,6 @@ const { t } = useLocale()
 <template>
   <section id="hero">
     <div class="grid-bg" />
-    <div class="hero-orb" />
 
     <div class="scroll-cue">
       <div class="scroll-line" />
@@ -49,17 +48,6 @@ const { t } = useLocale()
     linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 80px 80px;
   mask-image: radial-gradient(ellipse 70% 80% at 70% 30%, black, transparent);
-}
-
-.hero-orb {
-  position: absolute;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(192, 57, 43, 0.15) 0%, transparent 70%);
-  top: -100px;
-  right: -100px;
-  pointer-events: none;
 }
 
 .hero-eyebrow {
