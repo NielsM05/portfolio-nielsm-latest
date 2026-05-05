@@ -31,6 +31,43 @@ const display = computed(() => {
     content:     p[`content_${l}` as keyof Project] as string     || p.content_en,
   }
 })
+
+// Lightbox
+const lightboxOpen = ref(false)
+const lightboxIndex = ref(0)
+const photos = computed(() => project.value?.photos ?? [])
+
+function openLightbox(i: number) {
+  lightboxIndex.value = i
+  lightboxOpen.value = true
+  document.body.style.overflow = 'hidden'
+}
+
+function closeLightbox() {
+  lightboxOpen.value = false
+  document.body.style.overflow = ''
+}
+
+function prev() {
+  lightboxIndex.value = (lightboxIndex.value - 1 + photos.value.length) % photos.value.length
+}
+
+function next() {
+  lightboxIndex.value = (lightboxIndex.value + 1) % photos.value.length
+}
+
+function onKey(e: KeyboardEvent) {
+  if (!lightboxOpen.value) return
+  if (e.key === 'Escape') closeLightbox()
+  if (e.key === 'ArrowLeft') prev()
+  if (e.key === 'ArrowRight') next()
+}
+
+onMounted(() => window.addEventListener('keydown', onKey))
+onUnmounted(() => {
+  window.removeEventListener('keydown', onKey)
+  document.body.style.overflow = ''
+})
 </script>
 
 <template>
@@ -49,16 +86,14 @@ const display = computed(() => {
       <section v-if="project!.photos?.length" class="detail-section">
         <h2 class="detail-section-label">{{ t.project.photos }}</h2>
         <div class="photos-grid">
-          <a
+          <button
             v-for="(photo, i) in project!.photos"
             :key="i"
-            :href="photo"
-            target="_blank"
-            rel="noopener"
-            class="photo-link"
+            class="photo-btn"
+            @click="openLightbox(i)"
           >
             <img :src="photo" :alt="`${display!.title} ${i + 1}`" class="photo-img" />
-          </a>
+          </button>
         </div>
       </section>
 
@@ -92,6 +127,24 @@ const display = computed(() => {
     </main>
 
     <AppFooter />
+
+    <!-- Lightbox -->
+    <Teleport to="body">
+      <div v-if="lightboxOpen" class="lightbox" @click.self="closeLightbox">
+        <button class="lb-close" @click="closeLightbox">×</button>
+
+        <button v-if="photos.length > 1" class="lb-arrow lb-prev" @click="prev">‹</button>
+        <button v-if="photos.length > 1" class="lb-arrow lb-next" @click="next">›</button>
+
+        <div class="lb-img-wrap">
+          <img :src="photos[lightboxIndex]" :alt="`${display!.title} ${lightboxIndex + 1}`" class="lb-img" />
+        </div>
+
+        <div v-if="photos.length > 1" class="lb-counter">
+          {{ lightboxIndex + 1 }} / {{ photos.length }}
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 
@@ -115,7 +168,6 @@ const display = computed(() => {
   display: inline-block;
   margin-bottom: 3rem;
 }
-
 .back-link:hover { color: var(--white); }
 
 .detail-header {
@@ -166,18 +218,9 @@ const display = computed(() => {
   text-decoration: none;
   transition: border-color 0.2s;
 }
-
 .collab-card:hover { border-color: var(--accent); }
-
 .collab-name { font-size: 0.85rem; color: var(--white); }
-
-.collab-li {
-  font-family: var(--mono);
-  font-size: 0.55rem;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
+.collab-li { font-family: var(--mono); font-size: 0.55rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
 
 .photos-grid {
   display: grid;
@@ -185,11 +228,14 @@ const display = computed(() => {
   gap: 1px;
 }
 
-.photo-link {
+.photo-btn {
   display: block;
   overflow: hidden;
   aspect-ratio: 16 / 10;
   background: var(--surface);
+  border: none;
+  padding: 0;
+  cursor: zoom-in;
 }
 
 .photo-img {
@@ -198,8 +244,7 @@ const display = computed(() => {
   object-fit: cover;
   transition: transform 0.4s;
 }
-
-.photo-link:hover .photo-img { transform: scale(1.04); }
+.photo-btn:hover .photo-img { transform: scale(1.04); }
 
 .detail-content {
   font-size: 0.9rem;
@@ -230,17 +275,94 @@ const display = computed(() => {
   padding: 1rem 2rem;
   transition: opacity 0.2s;
 }
-
 .btn-red { background: var(--accent); color: var(--white); }
 .btn-red:hover { opacity: 0.85; }
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(0, 0, 0, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lb-img-wrap {
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lb-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+}
+
+.lb-close {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  font-size: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+.lb-close:hover { border-color: var(--accent); color: var(--accent); }
+
+.lb-arrow {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  font-size: 1.8rem;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+.lb-arrow:hover { border-color: var(--accent); color: var(--accent); }
+.lb-prev { left: 1.5rem; }
+.lb-next { right: 1.5rem; }
+
+.lb-counter {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.15em;
+}
 
 @media (max-width: 768px) {
   .detail-main { padding: 4rem 1.5rem 5rem; }
   .back-link { margin-bottom: 2rem; }
   .detail-header { margin-bottom: 2.5rem; padding-bottom: 2.5rem; }
   .detail-section { margin-bottom: 2.5rem; }
-  .photos-grid { grid-template-columns: 1fr; }
+  .photos-grid { grid-template-columns: 1fr 1fr; }
   .collab-list { flex-direction: column; }
   .collab-card { width: 100%; }
+  .lb-arrow { display: none; }
 }
 </style>

@@ -111,7 +111,7 @@ onMounted(() => {
         </template>
       </div>
 
-      <div class="like-row">
+      <div class="post-footer">
         <button class="like-btn" :class="{ liked }" :disabled="liked" @click="likePost">
           <span class="like-icon">{{ liked ? '♥' : '♡' }}</span>
           <span class="like-count">{{ likes }}</span>
@@ -119,7 +119,6 @@ onMounted(() => {
       </div>
 
       <div v-if="giscusCfg?.giscus_enabled" class="giscus-section">
-        <div class="giscus-divider" />
         <div ref="giscusEl" />
       </div>
     </main>
@@ -199,12 +198,14 @@ onMounted(() => {
   text-align: center;
 }
 
-.like-row {
+.post-footer {
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-top: 3.5rem;
-  padding-top: 2.5rem;
+  margin-top: 3rem;
+  padding: 1.5rem 0;
   border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .like-btn {
@@ -229,12 +230,7 @@ onMounted(() => {
 .like-icon { font-size: 1rem; line-height: 1; }
 .like-count { min-width: 1.5ch; text-align: left; }
 
-.giscus-section { margin-top: 5rem; }
-
-.giscus-divider {
-  border-top: 1px solid var(--border);
-  margin-bottom: 3rem;
-}
+.giscus-section { margin-top: 2rem; }
 
 @media (max-width: 768px) {
   .blog-detail { padding: 8rem 1.5rem 4rem; }
