@@ -107,6 +107,7 @@ const display = computed(() => (projects.value ?? []).slice(0, 3).map(p => ({
 }
 
 .proj-editorial:hover { border-color: var(--accent); }
+.proj-editorial:hover .proj-visual-inner { -webkit-text-stroke: 1px var(--accent); transition: -webkit-text-stroke 0.3s; }
 .proj-editorial.reverse { direction: rtl; }
 .proj-editorial.reverse > * { direction: ltr; }
 
@@ -126,6 +127,7 @@ const display = computed(() => (projects.value ?? []).slice(0, 3).map(p => ({
   color: transparent;
   -webkit-text-stroke: 1px rgba(192, 57, 43, 0.2);
   user-select: none;
+  transition: -webkit-text-stroke 0.3s;
 }
 
 .proj-info {
