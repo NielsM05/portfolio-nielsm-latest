@@ -102,18 +102,19 @@ nav.dark {
 
 .new-dot {
   position: absolute;
-  top: -3px;
-  right: -7px;
-  width: 5px;
-  height: 5px;
+  top: -4px;
+  right: -9px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background: var(--accent);
-  animation: pulse 2s infinite;
+  box-shadow: 0 0 6px var(--accent);
+  animation: pulse 1.8s infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
+  0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 6px var(--accent); }
+  50% { opacity: 0.6; transform: scale(1.4); box-shadow: 0 0 12px var(--accent); }
 }
 
 .nav-right {

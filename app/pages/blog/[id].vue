@@ -12,6 +12,7 @@ interface BlogPost {
   title_en: string; title_nl: string
   blocks?: Block[]
   content_en?: string; content_nl?: string
+  likes?: number
 }
 
 interface GiscusConfig {
@@ -45,6 +46,21 @@ const blocks = computed<Block[]>(() => {
   return content.split(/\n{2,}/).map(p => p.trim()).filter(Boolean)
     .map(p => ({ type: 'text' as const, content_en: p, content_nl: p }))
 })
+
+const likes = ref(post.value!.likes ?? 0)
+const liked = ref(false)
+
+onMounted(() => {
+  liked.value = !!localStorage.getItem(`liked_post_${post.value!.id}`)
+})
+
+async function likePost() {
+  if (liked.value) return
+  const { likes: newCount } = await $fetch<{ likes: number }>(`/api/blog/${post.value!.id}/like`, { method: 'POST' })
+  likes.value = newCount
+  liked.value = true
+  localStorage.setItem(`liked_post_${post.value!.id}`, '1')
+}
 
 const giscusEl = ref<HTMLElement | null>(null)
 
@@ -93,6 +109,13 @@ onMounted(() => {
             </figcaption>
           </figure>
         </template>
+      </div>
+
+      <div class="like-row">
+        <button class="like-btn" :class="{ liked }" :disabled="liked" @click="likePost">
+          <span class="like-icon">{{ liked ? '♥' : '♡' }}</span>
+          <span class="like-count">{{ likes }}</span>
+        </button>
       </div>
 
       <div v-if="giscusCfg?.giscus_enabled" class="giscus-section">
@@ -175,6 +198,36 @@ onMounted(() => {
   letter-spacing: 0.08em;
   text-align: center;
 }
+
+.like-row {
+  display: flex;
+  justify-content: center;
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.like-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.like-btn.liked { border-color: var(--accent); color: var(--accent); cursor: default; }
+.like-btn:disabled:not(.liked) { opacity: 0.4; }
+
+.like-icon { font-size: 1rem; line-height: 1; }
+.like-count { min-width: 1.5ch; text-align: left; }
 
 .giscus-section { margin-top: 5rem; }
 

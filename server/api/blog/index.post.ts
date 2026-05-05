@@ -29,6 +29,7 @@ export default defineEventHandler(async (event) => {
     summary_en: body.summary_en ?? '',
     summary_nl: body.summary_nl ?? '',
     blocks: body.blocks ?? [],
+    likes: 0,
     content_en: '',
     content_nl: '',
   }
