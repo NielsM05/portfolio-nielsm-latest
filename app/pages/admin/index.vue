@@ -189,6 +189,13 @@ async function deleteProject(id: number) {
   projects.value = projects.value.filter(p => p.id !== id)
 }
 
+async function moveProject(idx: number, dir: -1 | 1) {
+  const target = idx + dir
+  if (target < 0 || target >= projects.value.length) return
+  ;[projects.value[idx], projects.value[target]] = [projects.value[target], projects.value[idx]]
+  await $fetch('/api/projects/reorder', { method: 'PUT', body: { ids: projects.value.map(p => p.id) } })
+}
+
 async function uploadPhotos(e: Event) {
   const files = (e.target as HTMLInputElement).files
   if (!files) return
@@ -520,6 +527,8 @@ function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 
               <div class="item-title">{{ p.title_en || p.title_nl }}</div>
             </div>
             <div class="item-actions">
+              <button class="btn-icon btn-sm" :disabled="i === 0" @click="moveProject(i, -1)">↑</button>
+              <button class="btn-icon btn-sm" :disabled="i === projects.length - 1" @click="moveProject(i, 1)">↓</button>
               <NuxtLink :to="`/projects/${p.id}`" target="_blank" class="btn-icon">Bekijk</NuxtLink>
               <button class="btn-icon" @click="startEditProject(p)">Bewerk</button>
               <button class="btn-icon btn-icon-danger" @click="deleteProject(p.id)">Verwijder</button>
