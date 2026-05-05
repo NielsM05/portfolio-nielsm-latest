@@ -30,6 +30,7 @@ const translations = {
       experienceTitle: 'Experience',
       extraTitle: 'More about me',
       present: 'Present',
+      tags: { Stage: 'Internship', Vakantiejob: 'Summer job', Opleiding: 'Education', Werk: 'Work' } as Record<string, string>,
     },
     skills: {
       sub: 'A combination of offensive and defensive techniques — built through years of hands-on experience and continuous learning.',
@@ -111,6 +112,7 @@ const translations = {
       experienceTitle: 'Ervaring',
       extraTitle: 'Meer over mij',
       present: 'Heden',
+      tags: { Stage: 'Stage', Vakantiejob: 'Vakantiejob', Opleiding: 'Opleiding', Werk: 'Werk' } as Record<string, string>,
     },
     skills: {
       sub: 'Een combinatie van offensieve en defensieve technieken — opgebouwd door jarenlange praktijkervaring en continue bijscholing.',

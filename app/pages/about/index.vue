@@ -33,7 +33,7 @@ const allExperience = computed(() =>
       role: locale.value === 'nl' ? e.role_nl || e.role_en : e.role_en,
       company: e.company,
       period: from && to ? `${from} – ${to}` : from || to,
-      tag: e.tag || '',
+      tag: e.tag ? (t.value.about.tags[e.tag] ?? e.tag) : '',
       description: locale.value === 'nl' ? e.description_nl || e.description_en : e.description_en,
     }
   })
