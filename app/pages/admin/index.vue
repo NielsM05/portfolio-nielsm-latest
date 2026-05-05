@@ -33,7 +33,7 @@ interface BlogPost {
 
 interface ExperienceEntry {
   role_en: string; role_nl: string
-  company: string; date_from: string; date_to: string
+  company: string; date_from: string; date_to: string; tag: string
   description_en: string; description_nl: string
 }
 
@@ -347,7 +347,7 @@ async function saveAbout() {
 }
 
 function addExperience() {
-  aboutForm.value.experience.push({ role_en: '', role_nl: '', company: '', date_from: '', date_to: '', description_en: '', description_nl: '' })
+  aboutForm.value.experience.push({ role_en: '', role_nl: '', company: '', date_from: '', date_to: '', tag: '', description_en: '', description_nl: '' })
 }
 
 function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 1) }
@@ -588,10 +588,20 @@ function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 
                   <label class="form-label">Omschrijving<textarea v-model="exp.description_nl" class="field field-textarea" placeholder="Wat je deed…" /></label>
                 </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
                 <label class="form-label">Bedrijf<input v-model="exp.company" type="text" class="field" placeholder="AZ Sint-Jan Brugge" /></label>
-                <label class="form-label">Van<input v-model="exp.date_from" type="month" class="field" /></label>
-                <label class="form-label">Tot <span class="form-hint">(leeg = heden)</span><input v-model="exp.date_to" type="month" class="field" /></label>
+                <label class="form-label">Van<MonthYearPicker v-model="exp.date_from" placeholder="Selecteer maand" /></label>
+                <label class="form-label">Tot <span class="form-hint">(leeg = heden)</span><MonthYearPicker v-model="exp.date_to" placeholder="Heden" /></label>
+                <label class="form-label">
+                  Tag
+                  <select v-model="exp.tag" class="field">
+                    <option value="">— Geen —</option>
+                    <option value="Stage">Stage</option>
+                    <option value="Vakantiejob">Vakantiejob</option>
+                    <option value="Opleiding">Opleiding</option>
+                    <option value="Werk">Werk</option>
+                  </select>
+                </label>
               </div>
             </div>
             <button class="btn-ghost btn-sm" type="button" style="margin-top:0.75rem;" @click="addExperience">+ Ervaring toevoegen</button>

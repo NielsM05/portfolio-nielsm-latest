@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface ExperienceEntry {
   role_en: string; role_nl: string
-  company: string; date_from: string; date_to: string
+  company: string; date_from: string; date_to: string; tag: string
   description_en: string; description_nl: string
 }
 
@@ -23,7 +23,7 @@ const { data: config } = await useFetch<Config>('/api/config')
 
 const cvUrl = computed(() => config.value?.cv_url ?? '')
 
-const experience = computed(() =>
+const allExperience = computed(() =>
   [...(config.value?.experience ?? [])].map(e => {
     const from = formatMonth(e.date_from)
     const to = e.date_to ? formatMonth(e.date_to) : t.value.about.present
@@ -31,9 +31,16 @@ const experience = computed(() =>
       role: locale.value === 'nl' ? e.role_nl || e.role_en : e.role_en,
       company: e.company,
       period: from && to ? `${from} – ${to}` : from || to,
+      tag: e.tag || '',
       description: locale.value === 'nl' ? e.description_nl || e.description_en : e.description_en,
     }
   })
+)
+
+const availableTags = computed(() => [...new Set(allExperience.value.map(e => e.tag).filter(Boolean))])
+const activeTag = ref('')
+const experience = computed(() =>
+  activeTag.value ? allExperience.value.filter(e => e.tag === activeTag.value) : allExperience.value
 )
 </script>
 
@@ -70,21 +77,36 @@ const experience = computed(() =>
     </div>
 
     <!-- Timeline -->
-    <div v-if="experience.length" class="timeline-wrap reveal">
-      <div class="timeline-label">{{ t.about.experienceTitle }}</div>
-      <div class="timeline">
-        <div v-for="(exp, i) in experience" :key="i" class="timeline-entry">
-          <div class="tl-left">
-            <span class="tl-period">{{ exp.period }}</span>
-          </div>
-          <div class="tl-spine">
+    <div v-if="allExperience.length" class="timeline-wrap reveal">
+      <div class="timeline-header">
+        <div class="timeline-label">{{ t.about.experienceTitle }}</div>
+        <div v-if="availableTags.length" class="tl-filters">
+          <button
+            class="tl-filter-btn"
+            :class="{ active: activeTag === '' }"
+            @click="activeTag = ''"
+          >Alles</button>
+          <button
+            v-for="tag in availableTags"
+            :key="tag"
+            class="tl-filter-btn"
+            :class="{ active: activeTag === tag }"
+            @click="activeTag = tag"
+          >{{ tag }}</button>
+        </div>
+      </div>
+
+      <div class="tl-scroll">
+        <div class="tl-track">
+          <div class="tl-rail" />
+          <div v-for="(exp, i) in experience" :key="i" class="tl-entry">
             <div class="tl-dot" />
-            <div v-if="i < experience.length - 1" class="tl-line" />
-          </div>
-          <div class="tl-right">
-            <div class="tl-role">{{ exp.role }}</div>
-            <div class="tl-company">{{ exp.company }}</div>
-            <p v-if="exp.description" class="tl-desc">{{ exp.description }}</p>
+            <div class="tl-card">
+              <div class="tl-period">{{ exp.period }}</div>
+              <div class="tl-role">{{ exp.role }}</div>
+              <div class="tl-company">{{ exp.company }}</div>
+              <span v-if="exp.tag" class="tl-tag">{{ exp.tag }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -177,67 +199,103 @@ const experience = computed(() =>
   border-top: 1px solid var(--border);
 }
 
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
 .timeline-label {
   font-family: var(--mono);
   font-size: 0.6rem;
   color: var(--accent);
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  margin-bottom: 3rem;
 }
 
-.timeline { display: flex; flex-direction: column; }
+.tl-filters { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-.timeline-entry {
-  display: grid;
-  grid-template-columns: 120px 2rem 1fr;
-  gap: 0 1.5rem;
-  min-height: 5rem;
+.tl-filter-btn {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--border);
+  background: none;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.tl-filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tl-filter-btn.active { background: var(--accent); border-color: var(--accent); color: var(--white); }
+
+/* Horizontal scroll track */
+.tl-scroll {
+  overflow-x: auto;
+  padding-bottom: 1rem;
+  -webkit-overflow-scrolling: touch;
 }
 
-.tl-left {
+.tl-track {
   display: flex;
-  justify-content: flex-end;
-  padding-top: 0.15rem;
+  align-items: flex-start;
+  position: relative;
+  min-width: max-content;
+  padding-top: 1rem;
+}
+
+.tl-rail {
+  position: absolute;
+  top: 1.55rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+  z-index: 0;
+}
+
+.tl-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 220px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.tl-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 0 0 3px var(--bg);
+}
+
+.tl-card {
+  width: 100%;
+  padding: 0 1.25rem;
+  text-align: left;
 }
 
 .tl-period {
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   color: var(--accent);
   letter-spacing: 0.1em;
-  white-space: nowrap;
+  margin-bottom: 0.6rem;
+  line-height: 1.4;
 }
-
-.tl-spine {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.tl-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--accent);
-  flex-shrink: 0;
-  margin-top: 0.15rem;
-}
-
-.tl-line {
-  width: 1px;
-  flex: 1;
-  background: var(--border);
-  margin-top: 0.4rem;
-  margin-bottom: 0;
-  min-height: 2rem;
-}
-
-.tl-right { padding-bottom: 3rem; }
 
 .tl-role {
   font-family: var(--display);
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: var(--white);
   font-weight: 700;
   line-height: 1.2;
@@ -246,22 +304,29 @@ const experience = computed(() =>
 
 .tl-company {
   font-family: var(--mono);
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   color: var(--text);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
 }
 
-.tl-desc { font-size: 0.85rem; line-height: 1.7; }
+.tl-tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
 
 @media (max-width: 768px) {
   #about { padding: 4rem 1.5rem; }
   .about-cols { grid-template-columns: 1fr; gap: 2.5rem; }
   .about-hero-text { margin-bottom: 2.5rem; }
-
-  .timeline-entry { grid-template-columns: 80px 1.5rem 1fr; gap: 0 1rem; }
-  .tl-period { font-size: 0.55rem; }
-  .tl-role { font-size: 1rem; }
+  .timeline-header { flex-direction: column; align-items: flex-start; }
+  .tl-entry { width: 180px; }
 }
 </style>
