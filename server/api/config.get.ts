@@ -10,7 +10,7 @@ const defaults = {
   about_extra_nl: '',
   experience: [] as {
     role_en: string; role_nl: string
-    company: string; period: string
+    company: string; date_from: string; date_to: string
     description_en: string; description_nl: string
   }[],
 }

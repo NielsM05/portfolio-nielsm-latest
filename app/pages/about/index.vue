@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface Experience {
   role_en: string; role_nl: string
-  company: string; period: string
+  company: string; date_from: string; date_to: string
   description_en: string; description_nl: string
 }
 
@@ -13,6 +13,7 @@ interface Config {
 }
 
 const { locale, t } = useLocale()
+const { formatMonth } = useFormatMonth()
 useReveal()
 
 const { data: config } = await useFetch<Config>('/api/config')
@@ -24,12 +25,16 @@ const extraParagraphs = computed(() => {
   return raw.split(/\n{2,}/).map(p => p.trim()).filter(Boolean)
 })
 
-const experience = computed(() => (config.value?.experience ?? []).map(e => ({
-  role: locale.value === 'nl' ? e.role_nl || e.role_en : e.role_en,
-  company: e.company,
-  period: e.period,
-  description: locale.value === 'nl' ? e.description_nl || e.description_en : e.description_en,
-})))
+const experience = computed(() => (config.value?.experience ?? []).map(e => {
+  const from = formatMonth(e.date_from)
+  const to = e.date_to ? formatMonth(e.date_to) : t.value.about.present
+  return {
+    role: locale.value === 'nl' ? e.role_nl || e.role_en : e.role_en,
+    company: e.company,
+    period: from && to ? `${from} – ${to}` : from || to,
+    description: locale.value === 'nl' ? e.description_nl || e.description_en : e.description_en,
+  }
+}))
 
 const certifications = [
   { name: 'SEC0 - TryHackMe', year: '2026' },

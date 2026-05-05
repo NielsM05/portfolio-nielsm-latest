@@ -29,6 +29,7 @@ const translations = {
       downloadCv: 'Download CV',
       experienceTitle: 'Experience',
       extraTitle: 'More about me',
+      present: 'Present',
     },
     skills: {
       sub: 'A combination of offensive and defensive techniques — built through years of hands-on experience and continuous learning.',
@@ -109,6 +110,7 @@ const translations = {
       downloadCv: 'CV downloaden',
       experienceTitle: 'Ervaring',
       extraTitle: 'Meer over mij',
+      present: 'Heden',
     },
     skills: {
       sub: 'Een combinatie van offensieve en defensieve technieken — opgebouwd door jarenlange praktijkervaring en continue bijscholing.',

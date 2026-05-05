@@ -33,7 +33,7 @@ interface BlogPost {
 
 interface ExperienceEntry {
   role_en: string; role_nl: string
-  company: string; period: string
+  company: string; date_from: string; date_to: string
   description_en: string; description_nl: string
 }
 
@@ -347,7 +347,7 @@ async function saveAbout() {
 }
 
 function addExperience() {
-  aboutForm.value.experience.push({ role_en: '', role_nl: '', company: '', period: '', description_en: '', description_nl: '' })
+  aboutForm.value.experience.push({ role_en: '', role_nl: '', company: '', date_from: '', date_to: '', description_en: '', description_nl: '' })
 }
 
 function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 1) }
@@ -588,9 +588,10 @@ function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 
                   <label class="form-label">Omschrijving<textarea v-model="exp.description_nl" class="field field-textarea" placeholder="Wat je deed…" /></label>
                 </div>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;margin-top:0.75rem;">
                 <label class="form-label">Bedrijf<input v-model="exp.company" type="text" class="field" placeholder="AZ Sint-Jan Brugge" /></label>
-                <label class="form-label">Periode<input v-model="exp.period" type="text" class="field" placeholder="2025" /></label>
+                <label class="form-label">Van<input v-model="exp.date_from" type="month" class="field" /></label>
+                <label class="form-label">Tot <span class="form-hint">(leeg = heden)</span><input v-model="exp.date_to" type="month" class="field" /></label>
               </div>
             </div>
             <button class="btn-ghost btn-sm" type="button" style="margin-top:0.75rem;" @click="addExperience">+ Ervaring toevoegen</button>

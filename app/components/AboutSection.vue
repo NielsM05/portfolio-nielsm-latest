@@ -1,7 +1,7 @@
 <script setup lang="ts">
 interface ExperienceEntry {
   role_en: string; role_nl: string
-  company: string; period: string
+  company: string; date_from: string; date_to: string
   description_en: string; description_nl: string
 }
 
@@ -11,6 +11,7 @@ interface Config {
 }
 
 const { locale, t } = useLocale()
+const { formatMonth } = useFormatMonth()
 
 const certifications = [
   { name: 'SEC0 - TryHackMe', year: '2026' },
@@ -23,12 +24,16 @@ const { data: config } = await useFetch<Config>('/api/config')
 const cvUrl = computed(() => config.value?.cv_url ?? '')
 
 const experience = computed(() =>
-  [...(config.value?.experience ?? [])].map(e => ({
-    role: locale.value === 'nl' ? e.role_nl || e.role_en : e.role_en,
-    company: e.company,
-    period: e.period,
-    description: locale.value === 'nl' ? e.description_nl || e.description_en : e.description_en,
-  }))
+  [...(config.value?.experience ?? [])].map(e => {
+    const from = formatMonth(e.date_from)
+    const to = e.date_to ? formatMonth(e.date_to) : t.value.about.present
+    return {
+      role: locale.value === 'nl' ? e.role_nl || e.role_en : e.role_en,
+      company: e.company,
+      period: from && to ? `${from} – ${to}` : from || to,
+      description: locale.value === 'nl' ? e.description_nl || e.description_en : e.description_en,
+    }
+  })
 )
 </script>
 
