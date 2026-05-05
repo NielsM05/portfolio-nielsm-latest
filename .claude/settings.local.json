@@ -23,7 +23,12 @@
       "Bash(git -C /Users/niels/Development/WebProjecten/portfolio-nielsm-claude commit -m ' *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000)",
       "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('OK -', len\\(d\\), 'projects, fields:', list\\(d[0].keys\\(\\)\\)[:6]\\)\")",
-      "Bash(git -C /Users/niels/Development/WebProjecten/portfolio-nielsm-claude add server/data/projects.json server/api/projects/index.post.ts server/api/events/index.post.ts app/components/ProjectsSection.vue app/components/EventsSection.vue 'app/pages/projects/[id].vue' app/pages/admin/index.vue)"
+      "Bash(git -C /Users/niels/Development/WebProjecten/portfolio-nielsm-claude add server/data/projects.json server/api/projects/index.post.ts server/api/events/index.post.ts app/components/ProjectsSection.vue app/components/EventsSection.vue 'app/pages/projects/[id].vue' app/pages/admin/index.vue)",
+      "Bash(git -C /Users/niels/Development/WebProjecten/portfolio-nielsm-claude add server/utils/db.ts docker-compose.yml data/projects.json data/events.json)",
+      "Bash(git -C /Users/niels/Development/WebProjecten/portfolio-nielsm-claude add server/utils/db.ts docker-compose.yml)",
+      "Bash(git -C /Users/niels/Development/WebProjecten/portfolio-nielsm-claude add docker-compose.yml)",
+      "Bash(git *)",
+      "Bash(claude doctor *)"
     ]
   }
 }
