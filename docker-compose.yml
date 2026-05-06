@@ -8,6 +8,11 @@ services:
       - scoobydoo
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_AUDIENCE_ID=${RESEND_AUDIENCE_ID}
+      - CONTACT_FROM=${CONTACT_FROM}
+      - CONTACT_TO=${CONTACT_TO}
+      - SITE_URL=${SITE_URL}
     volumes:
       - portfolio_data:/app/data
     restart: unless-stopped
