@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 import { readData, writeData } from '../../utils/db'
 import { requireAuth } from '../../utils/auth'
-import { emailTemplate, h1Italic, label, p, btn, callout } from '../../utils/email'
+import { emailTemplate, h1Italic, label, p, btn } from '../../utils/email'
 
 interface BlogPost {
   id: number
@@ -53,10 +53,9 @@ export default defineEventHandler(async (event) => {
           subject: `Nieuwe post: ${newPost.title_en}`,
           content: `
             ${label('Nieuwe blogpost')}
-            ${h1Italic(newPost.title_en.split(' ').slice(0, -1).join(' ') || newPost.title_en, newPost.title_en.split(' ').slice(-1)[0] || '')}
-            ${newPost.summary_en ? callout(newPost.summary_en) : ''}
-            ${p(`Er is een nieuwe post verschenen op de blog van Niels Maes.`)}
-            ${btn('Lees de post', postUrl)}
+            ${h1Italic('Nieuwe', 'post.')}
+            ${p(newPost.title_en)}
+            ${btn('Lees het artikel', postUrl)}
           `,
           footerLinks: [{ label: 'Uitschrijven', href: unsubscribeUrl }],
         })

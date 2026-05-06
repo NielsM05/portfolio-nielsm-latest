@@ -1,5 +1,3 @@
-import { Resend } from 'resend'
-
 export default defineEventHandler(async (event) => {
   const { token } = getQuery(event)
 
@@ -11,10 +9,12 @@ export default defineEventHandler(async (event) => {
   const audienceId = process.env.RESEND_AUDIENCE_ID
   if (!apiKey || !audienceId) throw createError({ statusCode: 500, message: 'Service niet beschikbaar' })
 
-  const resend = new Resend(apiKey)
-  const { error } = await resend.contacts.remove({ audienceId, id: token })
+  const res = await fetch(`https://api.resend.com/audiences/${audienceId}/contacts/${token}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${apiKey}` },
+  })
 
-  if (error) throw createError({ statusCode: 404, message: 'Token niet gevonden' })
+  if (!res.ok) throw createError({ statusCode: 404, message: 'Token niet gevonden' })
 
   return { ok: true }
 })
