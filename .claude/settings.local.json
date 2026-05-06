@@ -47,7 +47,14 @@
       "Bash(curl -s -X POST http://localhost:3000/api/subscribe -H 'Content-Type: application/json' -d '{\"email\":\"nielsmaes.test@gmail.com\"}')",
       "Bash(curl *)",
       "Bash(kill 54936)",
-      "Bash(kill 55441 55440 55437 55327 55311 55281 35143)"
+      "Bash(kill 55441 55440 55437 55327 55311 55281 35143)",
+      "Bash(sips -s format png /Users/niels/Development/WebProjecten/portfolio-nielsm-claude/public/favicon.ico --out /tmp/favicon-check.png)",
+      "Bash(node -e ' *)",
+      "Bash(/usr/bin/qlmanage -t -s 32 -o /tmp/ /Users/niels/Development/WebProjecten/portfolio-nielsm-claude/public/favicon.svg)",
+      "Bash(python3 -c \"from PIL import Image; print\\('OK'\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 *)",
+      "Bash(sips *)"
     ]
   }
 }
