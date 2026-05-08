@@ -25,6 +25,7 @@ interface BlogPost {
   date_en: string; date_nl: string
   title_en: string; title_nl: string
   summary_en: string; summary_nl: string
+  linkedinUrl: string
   blocks?: Block[]
   content_en?: string; content_nl?: string
 }
@@ -215,6 +216,7 @@ function emptyBlogForm() {
     date_en: '', date_nl: '',
     title_en: '', title_nl: '',
     summary_en: '', summary_nl: '',
+    linkedinUrl: '',
     blocks: [] as Block[],
   }
 }
@@ -233,6 +235,7 @@ function startEditBlog(p: BlogPost) {
     date_en: p.date_en, date_nl: p.date_nl,
     title_en: p.title_en, title_nl: p.title_nl,
     summary_en: p.summary_en, summary_nl: p.summary_nl,
+    linkedinUrl: p.linkedinUrl ?? '',
     blocks: p.blocks?.length
       ? p.blocks.map(b => ({ ...b }))
       : (p.content_en || p.content_nl)
@@ -599,6 +602,11 @@ function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 
               <label class="form-label">Samenvatting <span class="form-hint">(zichtbaar in lijst)</span><textarea v-model="blogForm.summary_nl" class="field field-textarea" placeholder="Korte teaser…" /></label>
             </div>
           </div>
+
+          <label class="form-label form-single">
+            LinkedIn URL <span class="form-hint">(optioneel — link naar post op LinkedIn)</span>
+            <input v-model="blogForm.linkedinUrl" type="text" class="field" placeholder="https://linkedin.com/posts/…" />
+          </label>
 
           <!-- Block editor -->
           <div class="form-block">

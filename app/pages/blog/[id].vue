@@ -10,6 +10,7 @@ interface BlogPost {
   id: number
   date_en: string; date_nl: string
   title_en: string; title_nl: string
+  linkedinUrl?: string
   blocks?: Block[]
   content_en?: string; content_nl?: string
   likes?: number
@@ -116,6 +117,9 @@ onMounted(() => {
           <span class="like-icon">{{ liked ? '♥' : '♡' }}</span>
           <span class="like-count">{{ likes }}</span>
         </button>
+        <a v-if="post.linkedinUrl" :href="post.linkedinUrl" target="_blank" rel="noopener" class="li-btn">
+          {{ t.blog.linkedin }}
+        </a>
       </div>
 
       <div v-if="giscusCfg?.giscus_enabled" class="giscus-section">
@@ -202,6 +206,7 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
   margin-top: 3rem;
   padding: 1.5rem 0;
   border-top: 1px solid var(--border);
@@ -229,6 +234,19 @@ onMounted(() => {
 
 .like-icon { font-size: 1rem; line-height: 1; }
 .like-count { min-width: 1.5ch; text-align: left; }
+
+.li-btn {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.6rem 1.4rem;
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+.li-btn:hover { border-color: var(--accent); color: var(--accent); }
 
 .giscus-section { margin-top: 2rem; }
 

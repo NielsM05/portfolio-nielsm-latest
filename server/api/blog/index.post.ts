@@ -12,6 +12,7 @@ interface BlogPost {
   title_nl: string
   summary_en: string
   summary_nl: string
+  linkedinUrl: string
   blocks: unknown[]
   content_en: string
   content_nl: string
@@ -30,6 +31,7 @@ export default defineEventHandler(async (event) => {
     title_nl: body.title_nl ?? '',
     summary_en: body.summary_en ?? '',
     summary_nl: body.summary_nl ?? '',
+    linkedinUrl: body.linkedinUrl ?? '',
     blocks: body.blocks ?? [],
     likes: 0,
     content_en: '',
