@@ -12,16 +12,6 @@ interface Project {
   collaborators: Collaborator[]
 }
 
-interface Event {
-  id: number
-  date_iso: string
-  date_en: string;  date_nl: string
-  type_en: string;  type_nl: string
-  title_en: string; title_nl: string
-  description_en: string; description_nl: string
-  linkedinUrl: string
-}
-
 interface Block {
   type: 'text' | 'image'
   content_en?: string; content_nl?: string
@@ -94,19 +84,16 @@ async function logout() {
 }
 
 const projects = ref<Project[]>([])
-const events = ref<Event[]>([])
 const blogPosts = ref<BlogPost[]>([])
 const config = ref<Config>({})
 
 async function loadAll() {
-  const [p, e, b, c] = await Promise.all([
+  const [p, b, c] = await Promise.all([
     $fetch<Project[]>('/api/projects'),
-    $fetch<Event[]>('/api/events'),
     $fetch<BlogPost[]>('/api/blog'),
     $fetch<Config>('/api/config'),
   ])
   projects.value = p
-  events.value = e
   blogPosts.value = b
   config.value = c
   aboutForm.value = {
@@ -216,67 +203,6 @@ async function uploadPhotos(e: Event) {
 function removePhoto(idx: number) { projectForm.value.photos.splice(idx, 1) }
 function addCollaborator() { projectForm.value.collaborators.push({ name: '', linkedinUrl: '' }) }
 function removeCollaborator(idx: number) { projectForm.value.collaborators.splice(idx, 1) }
-
-// ─── Events ──────────────────────────────────────────────
-const showEventForm = ref(false)
-const editingEventId = ref<number | null>(null)
-const eventSaving = ref(false)
-
-function emptyEventForm() {
-  return {
-    date_iso: '',
-    date_en: '',  date_nl: '',
-    type_en: '',  type_nl: '',
-    title_en: '', title_nl: '',
-    description_en: '', description_nl: '',
-    linkedinUrl: '',
-  }
-}
-const eventForm = ref(emptyEventForm())
-
-function startNewEvent() {
-  editingEventId.value = null
-  eventForm.value = emptyEventForm()
-  showEventForm.value = true
-}
-
-function startEditEvent(ev: Event) {
-  editingEventId.value = ev.id
-  eventForm.value = {
-    date_iso: ev.date_iso ?? '',
-    date_en: ev.date_en,   date_nl: ev.date_nl,
-    type_en: ev.type_en,   type_nl: ev.type_nl,
-    title_en: ev.title_en, title_nl: ev.title_nl,
-    description_en: ev.description_en, description_nl: ev.description_nl,
-    linkedinUrl: ev.linkedinUrl,
-  }
-  showEventForm.value = true
-}
-
-function cancelEventForm() { showEventForm.value = false; editingEventId.value = null }
-
-async function saveEvent() {
-  eventSaving.value = true
-  try {
-    if (editingEventId.value !== null) {
-      const updated = await $fetch<Event>(`/api/events/${editingEventId.value}`, { method: 'PUT', body: eventForm.value })
-      const idx = events.value.findIndex(e => e.id === editingEventId.value)
-      if (idx >= 0) events.value[idx] = updated
-    } else {
-      const created = await $fetch<Event>('/api/events', { method: 'POST', body: eventForm.value })
-      events.value.push(created)
-    }
-    cancelEventForm()
-  } finally {
-    eventSaving.value = false
-  }
-}
-
-async function deleteEvent(id: number) {
-  if (!confirm('Dit event verwijderen?')) return
-  await $fetch(`/api/events/${id}`, { method: 'DELETE' })
-  events.value = events.value.filter(e => e.id !== id)
-}
 
 // ─── Blog ─────────────────────────────────────────────────
 const showBlogForm = ref(false)
@@ -535,67 +461,6 @@ function removeExperience(idx: number) { aboutForm.value.experience.splice(idx, 
             </div>
           </div>
           <div v-if="!projects.length" class="empty-state">Nog geen projecten.</div>
-        </div>
-      </section>
-
-      <!-- ── Events ── -->
-      <section class="admin-section">
-        <div class="section-head">
-          <h2 class="section-title">Events &amp; Blog</h2>
-          <button class="btn-action" @click="startNewEvent">+ Nieuw event</button>
-        </div>
-
-        <div v-if="showEventForm" class="form-card">
-          <h3 class="form-title">{{ editingEventId !== null ? 'Event bewerken' : 'Nieuw event' }}</h3>
-
-          <label class="form-label form-single">
-            Datum (JJJJ-MM-DD) <span class="form-hint">— voor sortering, bv. 2025-04-15</span>
-            <input v-model="eventForm.date_iso" type="date" class="field" />
-          </label>
-
-          <div class="bilingual-grid">
-            <div class="lang-col">
-              <div class="lang-tag">EN</div>
-              <label class="form-label">Date (display)<input v-model="eventForm.date_en" type="text" class="field" placeholder="April 15, 2025" /></label>
-              <label class="form-label">Type<input v-model="eventForm.type_en" type="text" class="field" placeholder="Conference" /></label>
-              <label class="form-label">Title<input v-model="eventForm.title_en" type="text" class="field" placeholder="Event title" /></label>
-              <label class="form-label">Description<textarea v-model="eventForm.description_en" class="field field-textarea" placeholder="Describe the event…" /></label>
-            </div>
-            <div class="lang-col">
-              <div class="lang-tag">NL</div>
-              <label class="form-label">Datum (weergave)<input v-model="eventForm.date_nl" type="text" class="field" placeholder="15 april 2025" /></label>
-              <label class="form-label">Type<input v-model="eventForm.type_nl" type="text" class="field" placeholder="Conferentie" /></label>
-              <label class="form-label">Titel<input v-model="eventForm.title_nl" type="text" class="field" placeholder="Evenementtitel" /></label>
-              <label class="form-label">Omschrijving<textarea v-model="eventForm.description_nl" class="field field-textarea" placeholder="Beschrijf het event…" /></label>
-            </div>
-          </div>
-
-          <label class="form-label form-single">
-            LinkedIn URL
-            <input v-model="eventForm.linkedinUrl" type="text" class="field" placeholder="https://linkedin.com/…" />
-          </label>
-
-          <div class="form-actions">
-            <button class="btn-action" :disabled="eventSaving" @click="saveEvent">{{ eventSaving ? 'Opslaan…' : 'Opslaan' }}</button>
-            <button class="btn-ghost" @click="cancelEventForm">Annuleren</button>
-          </div>
-        </div>
-
-        <div class="item-list">
-          <div v-for="ev in events" :key="ev.id" class="item-row">
-            <div class="item-meta-col">
-              <div class="item-cat">{{ ev.type_en || ev.type_nl }}</div>
-              <div class="item-date">{{ ev.date_en || ev.date_nl }}</div>
-            </div>
-            <div class="item-info">
-              <div class="item-title">{{ ev.title_en || ev.title_nl }}</div>
-            </div>
-            <div class="item-actions">
-              <button class="btn-icon" @click="startEditEvent(ev)">Bewerk</button>
-              <button class="btn-icon btn-icon-danger" @click="deleteEvent(ev.id)">Verwijder</button>
-            </div>
-          </div>
-          <div v-if="!events.length" class="empty-state">Nog geen events.</div>
         </div>
       </section>
 
