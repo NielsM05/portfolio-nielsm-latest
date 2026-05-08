@@ -14,7 +14,7 @@ useReveal()
     <ChapterDivider num="03" :title="t.chapters[2]" />
     <SkillsSection />
     <ChapterDivider num="04" :title="t.chapters[3]" />
-    <EventsSection />
+    <BlogSection />
     <ChapterDivider num="05" :title="t.chapters[4]" />
     <ContactSection />
     <AppFooter />

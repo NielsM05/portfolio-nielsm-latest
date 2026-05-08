@@ -28,7 +28,6 @@ const hasNewPost = computed(() => {
       <li><a href="/#about" @click="closeMenu">{{ t.nav.about }}</a></li>
       <li><a href="/#projects" @click="closeMenu">{{ t.nav.projects }}</a></li>
       <li><a href="/#skills" @click="closeMenu">{{ t.nav.skills }}</a></li>
-      <li><a href="/#events" @click="closeMenu">{{ t.nav.events }}</a></li>
       <li class="blog-li">
         <NuxtLink to="/blog" class="blog-link" @click="closeMenu">
           {{ t.nav.blog }}

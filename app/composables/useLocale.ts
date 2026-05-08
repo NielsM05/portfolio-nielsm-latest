@@ -20,7 +20,7 @@ const translations = {
       btn1: 'My work',
       btn2: 'Get in touch',
     },
-    chapters: ['Identification', 'Proof of work', 'Capabilities', 'Activity', 'Connection'],
+    chapters: ['Identification', 'Proof of work', 'Capabilities', 'Blog', 'Connection'],
     about: {
       intro: 'I am <em>Niels Maes</em> — a cybersecurity specialist who believes the best defense starts with thinking like an attacker.',
       p1: 'Currently in my third year of cybersecurity studies, with hands-on experience as a security engineer at AZ Sint-Jan hospital in Bruges. I focus on the defensive side of security — monitoring systems, detecting threats, and keeping incidents under control.',
@@ -59,6 +59,7 @@ const translations = {
       readMore: 'Read more →',
       back: '← Back to blog',
       empty: 'No posts yet.',
+      seeAll: 'See all posts →',
       subscriberLabel: 'Newsletter',
       subscribeTitle: 'Stay up to date',
       subscribeSub: 'Get an email when I publish a new post. No spam, unsubscribe anytime.',
@@ -111,7 +112,7 @@ const translations = {
       btn1: 'Mijn werk',
       btn2: 'Neem contact op',
     },
-    chapters: ['Identificatie', 'Bewijs van werk', 'Capaciteiten', 'Activiteit', 'Verbinding'],
+    chapters: ['Identificatie', 'Bewijs van werk', 'Capaciteiten', 'Blog', 'Verbinding'],
     about: {
       intro: 'Ik ben <em>Niels Maes</em> — een cybersecurity specialist die gelooft dat de beste verdediging begint met denken als een aanvaller.',
       p1: 'Momenteel in mijn derde jaar cybersecurity, met praktijkervaring als security engineer bij het AZ Sint-Jan ziekenhuis in Brugge. Ik focus op de defensieve kant van security — systemen monitoren, dreigingen detecteren en incidenten beheersen.',
@@ -150,6 +151,7 @@ const translations = {
       readMore: 'Lees meer →',
       back: '← Terug naar blog',
       empty: 'Nog geen posts.',
+      seeAll: 'Alle posts bekijken →',
       subscriberLabel: 'Nieuwsbrief',
       subscribeTitle: 'Blijf op de hoogte',
       subscribeSub: 'Ontvang een mail wanneer ik een nieuwe post publiceer. Geen spam, uitschrijven kan altijd.',
